@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>KKN Desa Gribig 2026 — Universitas Muria Kudus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Library QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --blue-dark: #0B1D3A;
+            --blue-mid: #143366;
+            --blue-accent: #1B5299;
+            --gold: #D4A843;
+            --gold-light: #F0D27C;
+            --white: #FFFFFF;
+            --off-white: #F4F6FA;
+            --card-bg: #FFFFFF;
+            --text-dark: #0B1D3A;
+            --text-muted: #5A6A80;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--off-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            padding-top: env(safe-area-inset-top);
+        }
+        .font-display { font-family: 'Playfair Display', Georgia, serif; }
+
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(11, 29, 58, 0.85);
+            -webkit-backdrop-filter: saturate(180%) blur(16px);
+            backdrop-filter: saturate(180%) blur(16px);
+            border-bottom: 1px solid rgba(212, 168, 67, 0.15);
+            transition: all 0.4s ease;
+            padding-top: env(safe-area-inset-top);
+        }
+        .navbar.scrolled {
+            background: rgba(11, 29, 58, 0.97);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover { color: var(--gold); }
+        .nav-link:hover::after { width: 100%; }
+
+        .hero {
+            min-height: 100vh;
+            min-height: 100dvh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(160deg, var(--blue-dark) 0%, var(--blue-mid) 40%, var(--blue-accent) 100%);
+            text-align: center;
+        }
+        .hero-photo-bg {
+            position: absolute; inset: 0; z-index: 1;
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0; z-index: 2;
+            background: linear-gradient(180deg, rgba(11,29,58,0.82) 0%, rgba(20,51,102,0.68) 35%, rgba(27,82,153,0.50) 60%, rgba(11,29,58,0.75) 100%);
+        }
+        .hero-fade-bottom {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 180px;
+            background: linear-gradient(to top, var(--off-white), transparent);
+            z-index: 6; pointer-events: none;
+        }
+        .hero-pattern {
+            position: absolute; inset: 0; opacity: 0.03; z-index: 3;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255,255,255,0.5) 49px, rgba(255,255,255,0.5) 50px), repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255,255,255,0.5) 49px, rgba(255,255,255,0.5) 50px);
+            pointer-events: none;
+        }
+        .particle {
+            position: absolute; border-radius: 50%; background: var(--gold);
+            opacity: 0; animation: floatParticle linear infinite; pointer-events: none; z-index: 4;
+        }
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(0) scale(0); }
+            10% { opacity: 0.6; } 90% { opacity: 0.1; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1); }
+        }
+        .rajawali-hero {
+            position: absolute; right: -5%; top: 50%;
+        }
+        .hero-logo {
+            width: clamp(130px, 28vw, 200px); height: clamp(130px, 28vw, 200px);
+            border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 1.5rem;
+            box-shadow: 0 0 0 5px rgba(212,168,67,0.35), 0 0 0 10px rgba(212,168,67,0.12), 0 15px 50px rgba(0,0,0,0.4);
+        }
+        .gold-line { width: 80px; height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 2px; margin: 0 auto; }
+        .gold-line-center { width: 80px; height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 2px; margin: 0 auto; }
+        .badge-angkatan {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--blue-dark); font-weight: 700; font-size: 0.75rem;
+            padding: 0.4rem 1rem; border-radius: 999px; letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .section-title { font-family: 'Playfair Display', Georgia, serif; font-weight: 800; color: var(--blue-dark); line-height: 1.15; }
+        .section-subtitle { color: var(--text-muted); font-weight: 400; max-width: 560px; }
+
+        .member-card {
+            background: var(--card-bg); border-radius: 16px; overflow: hidden;
+            box-shadow: 0 2px 20px rgba(11,29,58,0.06);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative; will-change: transform;
+        }
+        .member-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--blue-dark), var(--gold), var(--blue-dark));
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .member-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(11,29,58,0.15); }
+        .member-card:hover::before { opacity: 1; }
+        .member-photo { width: 100%; aspect-ratio: 1; object-fit: cover; background: linear-gradient(135deg, #e2e8f0, #cbd5e1); transition: transform 0.5s; display: block; }
+        .member-card:hover .member-photo { transform: scale(1.05); }
+        .photo-wrapper { overflow: hidden; position: relative; }
+        .photo-wrapper::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to top, rgba(11,29,58,0.6), transparent); pointer-events: none; }
+        .role-badge { position: absolute; bottom: 12px; left: 12px; z-index: 2; padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; }
+        .role-ketua { background: var(--gold); color: var(--blue-dark); }
+        .role-sekretaris { background: var(--blue-accent); color: var(--white); }
+        .role-bendahara { background: #2E7D32; color: var(--white); }
+        .role-anggota { background: rgba(255,255,255,0.9); color: var(--blue-dark); }
+        .member-info { padding: 1.25rem; }
+        .member-name { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 1.05rem; color: var(--blue-dark); margin-bottom: 0.25rem; }
+        .member-nim { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 0.5rem; }
+        .member-prodi { font-size: 0.8rem; color: var(--blue-accent); font-weight: 600; margin-bottom: 0.6rem; }
+        .member-motto { font-size: 0.75rem; color: var(--text-muted); font-style: italic; line-height: 1.5; border-left: 2px solid var(--gold); padding-left: 0.6rem; margin-top: 0.5rem; }
+        .member-social a { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; background: var(--off-white); color: var(--blue-mid); font-size: 0.8rem; transition: all 0.3s; text-decoration: none; }
+        .member-social a:hover { background: var(--gold); color: var(--blue-dark); transform: translateY(-2px); }
+
+        .info-card { background: var(--white); border-radius: 16px; padding: 2rem; border: 1px solid rgba(11,29,58,0.06); transition: all 0.3s; }
+        .info-card:hover { border-color: rgba(212,168,67,0.3); box-shadow: 0 8px 32px rgba(11,29,58,0.08); }
+        .info-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1rem; }
+
+        .map-section { background: linear-gradient(160deg, var(--blue-dark) 0%, var(--blue-mid) 100%); position: relative; overflow: hidden; }
+        .map-section::before { content: ''; position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.5) 39px, rgba(255,255,255,0.5) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.5) 39px, rgba(255,255,255,0.5) 40px); pointer-events: none; }
+
+        .footer { background: var(--blue-dark); color: rgba(255,255,255,0.6); padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+        .footer a { color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.3s; }
+        .footer a:hover { color: var(--gold); }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .scroll-top { position: fixed; bottom: calc(2rem + env(safe-area-inset-bottom)); right: 1.5rem; width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--blue-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 20px rgba(212,168,67,0.4); opacity: 0; transform: translateY(20px); transition: all 0.4s; z-index: 90; }
+        .scroll-top.show { opacity: 1; transform: translateY(0); }
+        .scroll-top:hover { transform: translateY(-3px); }
+
+        .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11,29,58,0.98); backdrop-filter: blur(20px); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; padding-top: env(safe-area-inset-top); }
+        .mobile-menu.open { display: flex; }
+        .mobile-menu a { color: var(--white); text-decoration: none; font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; font-weight: 700; transition: color 0.3s; }
+        .mobile-menu a:hover { color: var(--gold); }
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 300; background: none; border: none; padding: 8px; }
+        .hamburger span { width: 24px; height: 2px; background: var(--white); border-radius: 2px; display: block; }
+        @media (max-width: 768px) { .hamburger { display: flex; } .nav-desktop { display: none !important; } .rajawali-hero { width: 70%; right: -12%; opacity: 0.03; } }
+
+        .filter-btn { background: var(--white); color: var(--text-muted); border: 1px solid rgba(11,29,58,0.1); cursor: pointer; }
+        .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .filter-btn.active { background: var(--blue-dark); color: var(--gold); border-color: var(--blue-dark); }
+
+        .ornament-divider { display: flex; align-items: center; gap: 1rem; justify-content: center; }
+        .ornament-divider .line { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+        .ornament-divider .line:last-child { background: linear-gradient(90deg, var(--gold), transparent); }
+        .ornament-divider .diamond { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+
+        .umk-logo-nav { height: 38px; width: auto; object-fit: contain; display: block; }
+        .hero-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.75rem; border-radius: 0.75rem; font-weight: 600; font-size: 0.875rem; text-decoration: none; transition: all 0.3s; min-height: 48px; }
+
+        /* ===== QR CODE SECTION ===== */
+        .qr-section {
+            background: var(--off-white);
+            border-top: 1px solid rgba(11,29,58,0.06);
+        }
+        .qr-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 30px rgba(11,29,58,0.08);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue-dark), var(--gold), var(--blue-dark));
+        }
+        .qr-wrap {
+            display: inline-block;
+            padding: 16px;
+            background: var(--white);
+            border-radius: 12px;
+            border: 2px solid rgba(212,168,67,0.2);
+            margin-bottom: 1rem;
+        }
+        .qr-wrap img, .qr-wrap canvas {
+            display: block !important;
+            border-radius: 4px;
+        }
+        .qr-url {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            word-break: break-all;
+            max-width: 260px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        .qr-hint {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: 0.5rem;
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+            .particle { animation: none !important; display: none; }
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .member-card, .member-card:hover { transform: none; }
+            .member-photo, .member-card:hover .member-photo { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Navigasi utama">
+        <div class="max-w-7xl mx-auto px-5 py-3 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3 text-white no-underline">
+                <img src="https://z-cdn-media.chatglm.cn/files/d6ba77c7-02ed-48b2-8912-7a8a76b22fa7.png?auth_key=1883107622-8c0801fe34a5473faa4238bc9f4fc435-0-f99c15a0bde425265dd3c8304670ac81" alt="Logo UMK" class="umk-logo-nav">
+                <div>
+                    <div class="font-display font-bold text-sm leading-tight">KKN Desa Gribig</div>
+                    <div class="text-xs" style="color: var(--gold);">2026</div>
+                </div>
+            </a>
+            <div class="nav-desktop flex items-center gap-8">
+                <a href="#hero" class="nav-link">Beranda</a>
+                <a href="#anggota" class="nav-link">Anggota</a>
+                <a href="#kelompok" class="nav-link">Kelompok</a>
+                <a href="#lokasi" class="nav-link">Lokasi KKN</a>
+            </div>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button id="closeMenu" style="position:absolute;top:calc(1.5rem + env(safe-area-inset-top));right:1.5rem;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;width:48px;height:48px;display:flex;align-items:center;justify-content:center;" aria-label="Tutup menu"><i class="fas fa-times"></i></button>
+        <a href="#hero">Beranda</a>
+        <a href="#anggota">Anggota</a>
+        <a href="#kelompok">Kelompok</a>
+        <a href="#lokasi">Lokasi KKN</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-photo-bg" id="heroPhotoBg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-pattern"></div>
+        <div id="particles"></div>
+        <svg class="rajawali-hero" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M250 20 C180 60, 60 140, 40 220 C25 280, 60 340, 130 370 L160 340 C110 320, 85 285, 90 240 C98 180, 170 110, 250 60 C330 110, 402 180, 410 240 C415 285, 390 320, 340 340 L370 370 C440 340, 475 280, 460 220 C440 140, 320 60, 250 20Z" fill="white"/>
+            <path d="M250 80 L230 200 L250 180 L270 200 Z" fill="white"/>
+            <path d="M150 150 L200 190 L185 170 Z" fill="white" opacity="0.7"/>
+            <path d="M350 150 L300 190 L315 170 Z" fill="white" opacity="0.7"/>
+            <circle cx="250" cy="320" r="30" fill="none" stroke="white" stroke-width="4"/>
+            <path d="M238 320 L262 320 M250 308 L250 332" stroke="white" stroke-width="3"/>
+        </svg>
+        <div class="relative z-10 px-5 w-full max-w-2xl mx-auto">
+            <img src="https://z-cdn-media.chatglm.cn/files/289fc877-3f0a-4314-b4a2-fce909b7a4b8.jpeg?auth_key=1883147839-8026cf285e4c446f9067eb21977e8e41-0-efcfc3b3a2be040333bd8c81ae1f7563" alt="Logo KKN Desa Gribig" class="hero-logo" draggable="false" id="heroLogo">
+            <div class="badge-angkatan mx-auto mb-5"><i class="fas fa-graduation-cap"></i> KKN Tematik 2025/2026</div>
+            <h1 class="font-display text-white font-900 leading-tight mb-3" style="font-size: clamp(2rem, 5.5vw, 3.5rem);">KKN Desa <span style="color: var(--gold);">Gribig</span></h1>
+            <p class="text-white/70 text-base md:text-lg mb-2 font-medium">Universitas Muria Kudus</p>
+            <div class="gold-line mb-8"></div>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#anggota" class="hero-btn" style="background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--blue-dark);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(212,168,67,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow=''">Lihat Anggota <i class="fas fa-arrow-down"></i></a>
+                <a href="#lokasi" class="hero-btn border border-white/20 text-white" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='white'">Lokasi KKN <i class="fas fa-map-marker-alt"></i></a>
+            </div>
+        </div>
+        <div class="hero-fade-bottom"></div>
+    </section>
+
+    <!-- ANGGOTA -->
+    <section class="py-20 px-5" id="anggota">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-14 reveal">
+                <div class="badge-angkatan mx-auto mb-4" style="font-size:0.7rem;"><i class="fas fa-user-friends"></i> Tim Kami</div>
+                <h2 class="section-title text-3xl md:text-4xl mb-4">Anggota KKN Desa <span style="color: var(--gold);">Gribig</span></h2>
+                <div class="gold-line-center mb-4"></div>
+                <p class="section-subtitle mx-auto">Mahasiswa dari berbagai program studi yang bersatu dengan satu tujuan — mengabdi untuk masyarakat Desa Gribig.</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-3 mb-10 reveal" style="transition-delay:0.1s">
+                <button class="filter-btn active px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300" data-filter="semua">Semua</button>
+                <button class="filter-btn px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300" data-filter="pengurus">Pengurus</button>
+                <button class="filter-btn px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300" data-filter="anggota">Anggota</button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5" id="memberGrid"></div>
+        </div>
+    </section>
+
+    <div class="ornament-divider py-4"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+
+    <!-- KELOMPOK -->
+    <section class="py-20 px-5" id="kelompok">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12 reveal">
+                <div class="badge-angkatan mx-auto mb-4" style="font-size:0.7rem;"><i class="fas fa-users"></i> Profil Kelompok</div>
+                <h2 class="section-title text-3xl md:text-4xl mb-4">Tentang Kelompok <span style="color: var(--gold);">Kami</span></h2>
+                <div class="gold-line-center mb-4"></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 md:gap-5 reveal" style="transition-delay:0.15s">
+                <div class="info-card"><div class="info-icon" style="background: rgba(212,168,67,0.1); color: var(--gold);"><i class="fas fa-map-marker-alt"></i></div><h3 class="font-semibold text-sm mb-1" style="color:var(--blue-dark)">Lokasi</h3><p class="text-xs text-gray-500 leading-relaxed">Desa Gribig, Kecamatan Gebog, Kabupaten Kudus, Jawa Tengah</p></div>
+                <div class="info-card"><div class="info-icon" style="background: rgba(27,82,153,0.1); color: var(--blue-accent);"><i class="fas fa-calendar-alt"></i></div><h3 class="font-semibold text-sm mb-1" style="color:var(--blue-dark)">Periode</h3><p class="text-xs text-gray-500 leading-relaxed">Januari — Februari 2026</p></div>
+                <div class="info-card"><div class="info-icon" style="background: rgba(46,125,50,0.1); color: #2E7D32;"><i class="fas fa-university"></i></div><h3 class="font-semibold text-sm mb-1" style="color:var(--blue-dark)">Universitas</h3><p class="text-xs text-gray-500 leading-relaxed">Universitas Muria Kudus</p></div>
+                <div class="info-card"><div class="info-icon" style="background: rgba(183,28,28,0.1); color: #B71C1C;"><i class="fas fa-chalkboard-teacher"></i></div><h3 class="font-semibold text-sm mb-1" style="color:var(--blue-dark)">DPL</h3><p class="text-xs text-gray-500 leading-relaxed">Tina Rahayu S.M., M.M.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOKASI -->
+    <section class="map-section py-20 px-5" id="lokasi">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-12 reveal">
+                <div class="badge-angkatan mx-auto mb-4" style="font-size:0.7rem;"><i class="fas fa-map"></i> Lokasi KKN</div>
+                <h2 class="font-display font-800 text-3xl md:text-4xl text-white mb-4">Desa Gribig</h2>
+                <div class="gold-line-center mb-4"></div>
+                <p class="text-white/60 max-w-lg mx-auto text-sm leading-relaxed">Desa Gribig terletak di Kecamatan Gebog, Kabupaten Kudus, Jawa Tengah.</p>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-4 mb-8 reveal" style="transition-delay:0.1s">
+                <div class="rounded-2xl p-5 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);"><i class="fas fa-map-marker-alt text-xl mb-2" style="color: var(--gold);"></i><div class="text-white font-semibold text-sm">Kecamatan</div><div class="text-white/50 text-xs mt-1">Gebog</div></div>
+                <div class="rounded-2xl p-5 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);"><i class="fas fa-city text-xl mb-2" style="color: var(--gold);"></i><div class="text-white font-semibold text-sm">Kabupaten</div><div class="text-white/50 text-xs mt-1">Kudus, Jawa Tengah</div></div>
+                <div class="rounded-2xl p-5 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);"><i class="fas fa-university text-xl mb-2" style="color: var(--gold);"></i><div class="text-white font-semibold text-sm">Universitas</div><div class="text-white/50 text-xs mt-1">Muria Kudus</div></div>
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-2xl reveal" style="transition-delay:0.15s; border: 2px solid rgba(212,168,67,0.2);">
+                <iframe src="https://maps.google.com/maps?q=Desa+Gribig,+Kecamatan+Gebog,+Kabupaten+Kudus,+Jawa+Tengah&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="400" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Peta Desa Gribig"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- QR CODE SECTION -->
+    <section class="qr-section py-20 px-5" id="qrcode">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-10 reveal">
+                <div class="badge-angkatan mx-auto mb-4" style="font-size:0.7rem;"><i class="fas fa-qrcode"></i> Akses Cepat</div>
+                <h2 class="section-title text-3xl md:text-4xl mb-4">Scan <span style="color: var(--gold);">QR Code</span></h2>
+                <div class="gold-line-center mb-4"></div>
+                <p class="section-subtitle mx-auto">Scan QR code di bawah ini untuk langsung membuka halaman ini di perangkat lain.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-8 reveal" style="transition-delay:0.15s">
+                <!-- QR Code Card -->
+                <div class="qr-card">
+                    <div class="qr-wrap" id="qrcodeContainer"></div>
+                    <p class="font-display font-bold text-sm mb-1" style="color: var(--blue-dark);">KKN Desa Gribig 2026</p>
+                    <p class="qr-url" id="qrUrlDisplay"></p>
+                </div>
+                <!-- Instruksi -->
+                <div class="max-w-xs">
+                    <div class="flex items-start gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm" style="background: rgba(212,168,67,0.1); color: var(--gold);">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-sm mb-0.5" style="color:var(--blue-dark)">Buka Kamera</h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">Buka aplikasi kamera di HP kamu</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm" style="background: rgba(27,82,153,0.1); color: var(--blue-accent);">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-sm mb-0.5" style="color:var(--blue-dark)">Arahkan ke QR</h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">Arahkan kamera ke QR code di samping</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-sm" style="background: rgba(46,125,50,0.1); color: #2E7D32;">
+                            <i class="fas fa-external-link-alt"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-sm mb-0.5" style="color:var(--blue-dark)">Buka Otomatis</h4>
+                            <p class="text-xs text-gray-500 leading-relaxed">Link akan terbuka otomatis di browser</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer py-14 px-5">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-10 mb-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="https://z-cdn-media.chatglm.cn/files/d6ba77c7-02ed-48b2-8912-7a8a76b22fa7.png?auth_key=1883107622-8c0801fe34a5473faa4238bc9f4fc435-0-f99c15a0bde425265dd3c8304670ac81" alt="Logo UMK" style="height: 40px; width: auto; display: block;">
+                        <div><div class="font-display font-bold text-white text-sm">KKN Desa Gribig</div><div class="text-xs" style="color: var(--gold);">UMK 2025/2026</div></div>
+                    </div>
+                    <p class="text-sm leading-relaxed mb-4">Website perkenalan anggota KKN Desa Gribig, Kecamatan Gebog, Kabupaten Kudus — Universitas Muria Kudus.</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm" style="background: rgba(255,255,255,0.08);" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm" style="background: rgba(255,255,255,0.08);" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm" style="background: rgba(255,255,255,0.08);" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm" style="background: rgba(255,255,255,0.08);" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div><h4 class="font-display font-bold text-white mb-4">Navigasi</h4><div class="flex flex-col gap-2.5"><a href="#hero" class="text-sm">Beranda</a><a href="#anggota" class="text-sm">Anggota</a><a href="#kelompok" class="text-sm">Kelompok</a><a href="#lokasi" class="text-sm">Lokasi KKN</a><a href="#qrcode" class="text-sm">QR Code</a></div></div>
+                <div><h4 class="font-display font-bold text-white mb-4">Kontak</h4><div class="flex flex-col gap-3 text-sm"><div class="flex items-start gap-3"><i class="fas fa-map-marker-alt mt-1 flex-shrink-0" style="color:var(--gold)"></i><span>Desa Gribig, Kec. Gebog, Kab. Kudus, Jawa Tengah</span></div><div class="flex items-center gap-3"><i class="fas fa-envelope flex-shrink-0" style="color:var(--gold)"></i><span>kkn.gribig2026@gmail.com</span></div><div class="flex items-center gap-3"><i class="fas fa-university flex-shrink-0" style="color:var(--gold)"></i><span>Universitas Muria Kudus</span></div></div></div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs">&copy; 2026 KKN Desa Gribig — Universitas Muria Kudus.</p>
+                <div class="flex items-center gap-2 text-xs"><span>Bertugas dengan semangat</span><svg width="16" height="16" viewBox="0 0 100 100" fill="none"><path d="M50 10 C30 25, 10 45, 15 65 C18 75, 25 82, 35 85 L40 78 C32 75, 27 68, 25 60 C22 45, 35 30, 50 20 C65 30, 78 45, 75 60 C73 68, 68 75, 60 78 L65 85 C75 82, 82 75, 85 65 C90 45, 70 25, 50 10Z" fill="#D4A843"/></svg></div>
+            </div>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Kembali ke atas"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+        // ===== HERO PHOTO =====
+        var HERO_PHOTO_URL = 'https://z-cdn-media.chatglm.cn/files/289fc877-3f0a-4314-b4a2-fce909b7a4b8.jpeg?auth_key=1883147839-8026cf285e4c446f9067eb21977e8e41-0-efcfc3b3a2be040333bd8c81ae1f7563';
+        var heroBg = document.getElementById('heroPhotoBg');
+        heroBg.style.backgroundImage = 'url(' + HERO_PHOTO_URL + ')';
+        var imgTest = new Image();
+        imgTest.onload = function() {
+            document.querySelector('.hero-overlay').style.background = 'linear-gradient(180deg, rgba(11,29,58,0.75) 0%, rgba(20,51,102,0.55) 40%, rgba(27,82,153,0.35) 65%, rgba(11,29,58,0.65) 100%)';
+        };
+        imgTest.onerror = function() { heroBg.style.backgroundImage = 'none'; };
+        imgTest.src = HERO_PHOTO_URL;
+
+        // ===== QR CODE =====
+        // Ganti URL di bawah ini dengan URL hosting final kalian
+        // Misalnya: https://kkn-gribig.netlify.app
+        var WEBSITE_URL = window.location.href;
+
+        var qrContainer = document.getElementById('qrcodeContainer');
+        var qrUrlDisplay = document.getElementById('qrUrlDisplay');
+
+        // Generate QR Code
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrContainer, {
+                text: WEBSITE_URL,
+                width: 180,
+                height: 180,
+                colorDark: '#0B1D3A',
+                colorLight: '#FFFFFF',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+        // Tampilkan URL
+        qrUrlDisplay.textContent = WEBSITE_URL;
+
+        // ===== DATA ANGGOTA =====
+        var members = [
+            { nama: "Rizky Aditya Pratama", nim: "2022011001", prodi: "Teknik Informatika", foto: "https://picsum.photos/seed/gribig01/400/400.jpg", role: "ketua", roleLabel: "Ketua", ig: "#", wa: "#", motto: "Mengabdi bukan sekadar kewajiban, tapi panggilan jiwa." },
+            { nama: "Siti Nurhaliza", nim: "2022012005", prodi: "Manajemen", foto: "https://picsum.photos/seed/gribig02/400/400.jpg", role: "sekretaris", roleLabel: "Sekretaris", ig: "#", wa: "#", motto: "Menulis catatan perjalanan, satu langkah mengabdi." },
+            { nama: "Ahmad Fadhil Rahman", nim: "2022013003", prodi: "Akuntansi", foto: "https://picsum.photos/seed/gribig03/400/400.jpg", role: "bendahara", roleLabel: "Bendahara", ig: "#", wa: "#", motto: "Setiap rupiah yang dikelola adalah amanah desa." },
+            { nama: "Dewi Safitri Wulandari", nim: "2022014008", prodi: "Psikologi", foto: "https://picsum.photos/seed/gribig04/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Mendengar lebih dalam daripada sekadar melihat." },
+            { nama: "Muhammad Irfan Hakim", nim: "2022015012", prodi: "Ilmu Komunikasi", foto: "https://picsum.photos/seed/gribig05/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Cerita desa layak untuk didengar dunia." },
+            { nama: "Anisa Rahmawati", nim: "2022016007", prodi: "Pendidikan Matematika", foto: "https://picsum.photos/seed/gribig06/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Mengajar bukan transfer ilmu, tapi transfer semangat." },
+            { nama: "Bagus Setiawan", nim: "2022017004", prodi: "Teknik Industri", foto: "https://picsum.photos/seed/gribig07/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Efisiensi bukan hanya di pabrik, tapi juga dalam mengabdi." },
+            { nama: "Fitriani Maulida", nim: "2022018009", prodi: "Keperawatan", foto: "https://picsum.photos/seed/gribig08/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Kesehatan masyarakat dimulai dari langkah kecil kita." },
+            { nama: "Eko Prasetyo Nugroho", nim: "2022019011", prodi: "Agroteknologi", foto: "https://picsum.photos/seed/gribig09/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Tanah desa adalah laboratorium terbaik." },
+            { nama: "Rina Puspitasari", nim: "2022020015", prodi: "Pendidikan Bahasa Inggris", foto: "https://picsum.photos/seed/gribig10/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Bahasa membuka pintu, kebaikan membuka hati." },
+            { nama: "Hendra Kurniawan", nim: "2022021006", prodi: "Sistem Informasi", foto: "https://picsum.photos/seed/gribig11/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Teknologi untuk desa, bukan sebaliknya." },
+            { nama: "Putri Ayu Lestari", nim: "2022022002", prodi: "Farmasi", foto: "https://picsum.photos/seed/gribig12/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Obat menyembuhkan raga, senyuman menyembuhkan jiwa." },
+            { nama: "Dimas Aryo Putro", nim: "2022023010", prodi: "Hukum", foto: "https://picsum.photos/seed/gribig13/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Keadilan dimulai dari kesadaran hukum di tingkat desa." },
+            { nama: "Laila Fitri Ramadhani", nim: "2022024013", prodi: "Gizi", foto: "https://picsum.photos/seed/gribig14/400/400.jpg", role: "anggota", roleLabel: "Anggota", ig: "#", wa: "#", motto: "Gizi baik, masa depan desa cerah." }
+        ];
+
+        var memberGrid = document.getElementById('memberGrid');
+        function renderMembers(filter) {
+            var filtered = filter === 'semua' ? members : filter === 'pengurus' ? members.filter(function(m){return m.role!=='anggota';}) : members.filter(function(m){return m.role==='anggota';});
+            memberGrid.innerHTML = '';
+            for (var i = 0; i < filtered.length; i++) {
+                var m = filtered[i];
+                var card = document.createElement('div');
+                card.className = 'member-card reveal';
+                card.style.transitionDelay = (i * 0.06) + 's';
+                card.innerHTML = '<div class="photo-wrapper"><img src="'+m.foto+'" alt="Foto '+m.nama+'" class="member-photo" loading="lazy" onerror="this.src=\'https://picsum.photos/seed/fb'+i+'/400/400.jpg\'"><span class="role-badge role-'+m.role+'">'+m.roleLabel+'</span></div><div class="member-info"><div class="member-name">'+m.nama+'</div><div class="member-nim">'+m.nim+'</div><div class="member-prodi">'+m.prodi+'</div>'+(m.motto?'<div class="member-motto">"'+m.motto+'"</div>':'')+'<div class="member-social flex gap-2 mt-3"><a href="'+m.ig+'" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a><a href="'+m.wa+'" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a></div></div>';
+                memberGrid.appendChild(card);
+            }
+            observeReveal();
+        }
+        renderMembers('semua');
+
+        document.querySelectorAll('.filter-btn').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');renderMembers(btn.dataset.filter);});});
+
+        function observeReveal(){if(!('IntersectionObserver' in window)){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('visible')});return;}var o=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');o.unobserve(en.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.reveal:not(.visible)').forEach(function(el){o.observe(el);});}
+        observeReveal();
+
+        var navbar=document.getElementById('navbar'),ticking=false;
+        window.addEventListener('scroll',function(){if(!ticking){window.requestAnimationFrame(function(){navbar.classList.toggle('scrolled',window.scrollY>60);ticking=false;});ticking=true;}},{passive:true});
+
+        var stb=document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll',function(){stb.classList.toggle('show',window.scrollY>600);},{passive:true});
+        stb.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+        document.getElementById('hamburgerBtn').addEventListener('click',function(){document.getElementById('mobileMenu').classList.add('open');});
+        document.getElementById('closeMenu').addEventListener('click',function(){document.getElementById('mobileMenu').classList.remove('open');});
+        document.getElementById('mobileMenu').querySelectorAll('a').forEach(function(l){l.addEventListener('click',function(){document.getElementById('mobileMenu').classList.remove('open');});});
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(this.getAttribute('href'));if(t){window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-70,behavior:'smooth'});}});});
+
+        var pc=document.getElementById('particles'),ca=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function cp(){if(!ca)return;var p=document.createElement('div');p.className='particle';var s=Math.random()*4+2,l=Math.random()*100,d=Math.random()*8+6,dl=Math.random()*4;p.style.cssText='width:'+s+'px;height:'+s+'px;left:'+l+'%;bottom:-10px;animation-duration:'+d+'s;animation-delay:'+dl+'s';pc.appendChild(p);setTimeout(function(){if(p.parentNode)p.parentNode.removeChild(p);},(d+dl)*1000);}
+        if(ca){setInterval(cp,800);for(var i=0;i<8;i++)(function(x){setTimeout(cp,x*300);})(i);}
+    </script>
+</body>
+</html>
